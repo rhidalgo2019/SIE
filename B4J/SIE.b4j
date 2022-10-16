@@ -1,0 +1,312 @@
+﻿AppType=JavaFX
+Build1=Default,japam.sie
+File1=agua.bmp
+File10=dinero.png
+File11=Energia.bjl
+File12=Energia.bmp
+File13=Financiera.bjl
+File14=Finanzas.bmp
+File15=Fondo.png
+File16=Grafica.bjl
+File17=Grafica.xls
+File18=Grafica.xlsx
+File19=Indicadores.bjl
+File2=B4XFinanciera.bas
+File20=Indicadores.bmp
+File21=MainPage.bjl
+File22=Menu.bjl
+File23=Operacion.bjl
+File24=Regresar.png
+File25=RH.bjl
+File26=RH.png
+File27=sie.png
+File28=TQ.bmp
+File29=usuarios.bmp
+File3=B4XGrafica.bas
+File4=blanco.bmp
+File5=calculadora.png
+File6=Calcular.bjl
+File7=Calcular.bmp
+File8=Comercial.bjl
+File9=Contabilidad.bjl
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=New Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=b4xpages
+Library10=xui views
+Library11=xlutils
+Library2=b4xtable
+Library3=jcharts
+Library4=jcore
+Library5=jexcel
+Library6=jfx
+Library7=jsd_flexgrid
+Library8=jsql
+Library9=sd_sql
+Module1=B4XCalcular
+Module10=B4XOperacion
+Module11=B4XRH
+Module2=B4XComercial
+Module3=B4XContabilidad
+Module4=B4XEnergia
+Module5=B4XFinanciera
+Module6=B4XGrafica
+Module7=B4XIndicadores
+Module8=|relative|..\B4XMainPage
+Module9=B4XMenu
+NumberOfFiles=29
+NumberOfLibraries=11
+NumberOfModules=11
+Version=9.8
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 800
+	#MainFormHeight: 600 
+    #MergeLibraries: True
+#End Region
+
+#PackagerProperty: IconFile = ..\Files\icono.ico
+#PackagerProperty: ExeName = SIE
+'#PackagerProperty: IncludedModules = jdk.charsets
+'#PackagerProperty: IncludedModules = jdk.localedata
+
+#IgnoreWarnings: 9
+#IgnoreWarnings: 11
+#IgnoreWarnings: 14
+#IgnoreWarnings: 15
+#IgnoreWarnings: 16
+
+'MySQL Connector/J Driver
+#AdditionalJar: mysql-connector-java-5.1.47-bin.jar
+'#AdditionalJar: jtds-1.3.1.jar
+'#CustomBuildAction: After Packager, %WINDIR%\System32\robocopy.exe, ..\ temp\build\bin\Charsets.properties
+'#AdditionalJar: mssql-jdbc-10.2.0.jre11
+'#AdditionalJar: mssql-jdbc-10.2.0.jre17
+
+Sub Process_Globals
+	Private fx As JFX
+	Private MainForm As Form
+	Private xui As XUI
+
+	' MySQL Web
+'	Public SERVIDOR As String = "auth-db430.hostinger.com"
+	Public SERVIDOR As String = "sql430.main-hosting.eu"
+'	Public SERVIDOR As String = "45.84.204.205"
+	Public BASE_DATOS As String = "u567762233_SIE"
+	Public ADMINISTRADOR As String = "u567762233_admin"
+	Public PASSWORD As String = "Admin2022"
+	Public mSQL, mSQL2 As SQL
+	Public mRS, mRS2 As ResultSet
+	Public MSSQL As SD_SQL
+' MSSQL Japam
+'	Public SERVIDOR As String = "192.168.0.27:1143/SQLRACHEL"
+'	Public ADMINISTRADOR As String = "admin"
+'	Public PASSWORD As String = "Admin2022*"
+'   mTIPO_SQL = 2
+' MSSSQL Local
+'	mTIPO_SQL = 2
+'	Public SERVIDOR As String = "CASA"
+'	Public ADMINISTRADOR As String = "sa"
+'	Public PASSWORD As String = "administrador"
+
+	Public mUSUARIOS(50) As String
+	Public mCLAVES(50) As String
+	Public mDERECHOS(50) As Int
+	Public x, mULT_USUARIO As Int
+
+	Public mUSUARIO, mCLAVE As String
+	Public mDERECHO As Int
+	Public mANIO, mMES As Int
+	
+	Public mULT_EXTRAIDO As Int
+	Public mULT_DATOS As Int
+	Public mULT_INDICADOR As Int
+	Public mCONEXION As Boolean
+	
+	Public mPANTALLA_ANCHO As Double
+	Public mPANTALLA_ALTO As Double
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.Show
+	Dim PagesManager As B4XPagesManager
+	PagesManager.Initialize(MainForm)
+	MainForm.Resizable = True
+	Log("Ancho = " & MainForm.RootPane.Width & ", Alto = " & MainForm.RootPane.Height)
+	
+End Sub
+
+Public Sub mFORMATO(Valor As String, Formato As String) As Object
+	' Valor = Valor al cual se quiere dar formato
+	' Formato =  'T' - Formato de texto simple
+	'            'N' - Formato numérico, con separarión de miles y decimales
+	'            'M' - Formato Monetario, con dos decimales
+	'            'P' - Formato de porcentaje
+	'
+	Dim mRET As String
+	Dim mVALOR As String
+	Dim mENTEROS, mDECIMALES As String
+	Dim mLARGO, mPOS_DECIMAL As Int
+	Dim mMONEDA, mPORCENTAJE As String
+	Dim mINI_DECIMAL, mFIN_DECIMAL As Int
+	
+	mRET = ""
+	Formato = Formato.ToUpperCase
+	If Formato = "N" Or Formato = "M" Or Formato = "P" Then
+		mRET = Valor
+		mRET = mRET.Replace("$", "")
+		mRET = mRET.Trim
+		mLARGO = mRET.Length
+		mPOS_DECIMAL = mRET.LastIndexOf(".")
+		mENTEROS = ""
+		mDECIMALES = ""
+		If Formato = "M" Then
+			mMONEDA = "$"
+		Else
+			mMONEDA = ""
+		End If
+		If Formato = "P" Then
+			mPORCENTAJE = "%"
+		Else
+			mPORCENTAJE = ""
+		End If
+		If mPOS_DECIMAL = 0 Then
+			mENTEROS = ""
+			mDECIMALES = mRET
+			mRET = mMONEDA & "0" & mDECIMALES & " " & mPORCENTAJE
+		Else
+			If mPOS_DECIMAL = -1 Then
+				mENTEROS = mRET
+				mDECIMALES = "00"
+			Else
+				mENTEROS = mRET.SubString2(0, mPOS_DECIMAL)
+				mINI_DECIMAL = mPOS_DECIMAL + 1
+				If mINI_DECIMAL > mLARGO Then
+					mINI_DECIMAL = mLARGO
+				End If
+				mFIN_DECIMAL= mPOS_DECIMAL + 3
+				If mFIN_DECIMAL > mLARGO Then
+					mFIN_DECIMAL = mLARGO
+				End If
+				mDECIMALES = mRET.SubString2(mINI_DECIMAL, mFIN_DECIMAL)
+			End If
+			If mDECIMALES.Length = 0 Then
+				mDECIMALES = "00"
+			End If
+			mLARGO = mENTEROS.Length
+			If mLARGO >= 1 And mLARGO <= 3 Then
+				mRET = mMONEDA & mRET.SubString2(0, mLARGO) & "." & mDECIMALES & mPORCENTAJE
+			End If
+			If mLARGO >= 4 And mLARGO <= 6 Then
+				mRET = mMONEDA & mRET.SubString2(0, mLARGO - 3) & "," & mRET.SubString2(mLARGO - 3, mLARGO) & "." & mDECIMALES & mPORCENTAJE
+			End If
+			If mLARGO >= 7 And mLARGO <= 9 Then
+				mRET = mMONEDA & mRET.SubString2(0, mLARGO - 6) & "'" & mRET.SubString2(mLARGO - 6, mLARGO -3) & "," & mRET.SubString2(mLARGO - 3, mLARGO) & "." & mDECIMALES & mPORCENTAJE
+			End If
+		End If
+	End If
+	If Formato = "T" Then
+		mVALOR = Valor
+		mVALOR = mVALOR.Replace("'", "")
+		mVALOR = mVALOR.Replace(",", "")
+		mVALOR = mVALOR.Replace("$", "")
+		mVALOR = mVALOR.Replace("%", "")
+		mVALOR = mVALOR.Trim
+		mRET = mVALOR
+	End If
+	mRET = mRET.Trim
+	Return mRET
+End Sub
+
+Public Sub Conectar_Servidor()
+	Log("Driver: com.mysql.jdbc.Driver" & "jdbc:mysql://${SERVIDOR}/${BASE_DATOS}?useSSL=false")
+	Log("Base de datos: " & BASE_DATOS)
+	Log("Administrador: " & ADMINISTRADOR)
+	Log("Password: " & PASSWORD)
+	mSQL.Initialize2("com.mysql.jdbc.Driver", $"jdbc:mysql://${SERVIDOR}/${BASE_DATOS}?useSSL=false"$,  ADMINISTRADOR, PASSWORD)
+End Sub
+
+Public Sub Conectar_Servidor_2()
+	mSQL2.Initialize2("com.mysql.jdbc.Driver", $"jdbc:mysql://${SERVIDOR}/${BASE_DATOS}?useSSL=false"$,  ADMINISTRADOR, PASSWORD)
+End Sub
+
+Public Sub Leer_Usuarios()
+	Dim mRS As ResultSet
+
+	If mSQL.IsInitialized Then
+		mRS = mSQL.ExecQuery("SELECT usu_nombre FROM sie_usuarios")
+		mULT_USUARIO = -1
+		Do While mRS.NextRow
+			mULT_USUARIO = mULT_USUARIO + 1
+			mUSUARIOS(mULT_USUARIO) = mRS.GetString("usu_nombre")
+		Loop
+		mULT_USUARIO = -1
+		mRS = mSQL.ExecQuery("SELECT usu_clave FROM sie_usuarios")
+		Do While mRS.NextRow
+			mULT_USUARIO = mULT_USUARIO + 1
+			mCLAVES(mULT_USUARIO) = mRS.GetString("usu_clave")
+		Loop
+		mULT_USUARIO = -1
+		mRS = mSQL.ExecQuery("SELECT usu_derecho FROM sie_usuarios")
+		Do While mRS.NextRow
+			mULT_USUARIO = mULT_USUARIO + 1
+			mDERECHOS(mULT_USUARIO) = mRS.GetInt("usu_derecho")
+		Loop
+		mRS.Close
+	Else
+Log("No conectado")
+	End If
+End Sub
+
+'Template version: B4J-1.0
+#Region Delegates
+Sub MainForm_FocusChanged (HasFocus As Boolean)
+	B4XPages.Delegate.MainForm_FocusChanged(HasFocus)
+End Sub
+
+Sub MainForm_Resize (Width As Double, Height As Double)
+	B4XPages.Delegate.MainForm_Resize(Width, Height)
+	mPANTALLA_ANCHO = Width
+	mPANTALLA_ALTO = Height
+End Sub
+
+Sub MainForm_Closed
+	B4XPages.Delegate.MainForm_Closed
+End Sub
+
+Sub MainForm_CloseRequest (EventData As Event)
+	B4XPages.Delegate.MainForm_CloseRequest(EventData)
+End Sub
+
+Public Sub MainForm_IconifiedChanged (Iconified As Boolean)
+	B4XPages.Delegate.MainForm_IconifiedChanged(Iconified)
+End Sub
+#End Region

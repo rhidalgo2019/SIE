@@ -1,0 +1,171 @@
+﻿Build1=Default,japam.SIE
+File1=agua.bmp
+File10=Fondo.png
+File11=indicadores.bal
+File12=Indicadores.bmp
+File13=MainPage.bal
+File14=menu.bal
+File15=operacion.bal
+File16=Regresar.png
+File17=rh.bal
+File18=RH.png
+File19=TQ.bmp
+File2=calculadora.png
+File20=usuarios.bmp
+File3=calcular.bal
+File4=Calcular.bmp
+File5=comercial.bal
+File6=contabilidad.bal
+File7=dinero.png
+File8=energia.bal
+File9=Energia.bmp
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=b4xpages
+Library2=b4xtable
+Library3=core
+Library4=sd_sql
+Library5=xui views
+Library6=jsd_flexgrid
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="29"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+Module1=B4XCalcular
+Module10=Starter
+Module2=B4XComercial
+Module3=B4XContabilidad
+Module4=B4XEnergia
+Module5=B4XIndicadores
+Module6=B4XMainPage
+Module7=B4XMenu
+Module8=B4XOperacion
+Module9=B4XRH
+NumberOfFiles=20
+NumberOfLibraries=6
+NumberOfModules=10
+Version=11
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: SIE
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+#End Region
+
+
+#IgnoreWarnings: 14
+#IgnoreWarnings: 15
+#IgnoreWarnings: 16
+#IgnoreWarnings: 9
+
+#AdditionalJar: mysql-connector-java-5.1.47-bin.jar
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+'#BridgeLogger: True
+
+Sub Process_Globals
+	Public ActionBarHomeClicked As Boolean
+	' MySQL Web
+	Public SERVIDOR As String = "auth-db430.hostinger.com"
+	Public ADMINISTRADOR As String = "u567762233_admin"
+	Public PASSWORD As String = "Admin2022"
+	Public mSQL, mSQL2 As SQL
+	Public mRS, mRS2 As ResultSet
+	Public MSSQL As SD_SQL
+	' MSSQL Japam
+'	Public SERVIDOR As String = "192.168.0.27:1143/SQLRACHEL"
+'	Public ADMINISTRADOR As String = "admin"
+'	Public PASSWORD As String = "Admin2022*"
+	'   mTIPO_SQL = 2
+	' MSSSQL Local
+'	mTIPO_SQL = 2
+'	Public SERVIDOR As String = "CASA"
+'	Public ADMINISTRADOR As String = "sa"
+'	Public PASSWORD As String = "administrador"
+
+	Public mUSUARIOS(50) As String
+	Public mCLAVES(50) As String
+	Public mDERECHOS(50) As Int
+	Public x, mULT_USUARIO As Int
+
+	Public mUSUARIO, mCLAVE As String
+	Public mDERECHO As Int
+	Public mANIO, mMES As Int
+	
+	Public mULT_EXTRAIDO As Int
+	Public mULT_DATOS As Int
+	Public mULT_INDICADOR As Int
+	Public mCONEXION As Boolean
+End Sub
+
+Sub Globals
+
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Dim pm As B4XPagesManager
+	pm.Initialize(Activity)
+End Sub
+
+'Template version: B4A-1.01
+#Region Delegates
+
+Sub Activity_ActionBarHomeClick
+	ActionBarHomeClicked = True
+	B4XPages.Delegate.Activity_ActionBarHomeClick
+	ActionBarHomeClicked = False
+End Sub
+
+Sub Activity_KeyPress (KeyCode As Int) As Boolean
+	Return B4XPages.Delegate.Activity_KeyPress(KeyCode)
+End Sub
+
+Sub Activity_Resume
+	B4XPages.Delegate.Activity_Resume
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	B4XPages.Delegate.Activity_Pause
+End Sub
+
+Sub Activity_PermissionResult (Permission As String, Result As Boolean)
+	B4XPages.Delegate.Activity_PermissionResult(Permission, Result)
+End Sub
+
+Sub Create_Menu (Menu As Object)
+	B4XPages.Delegate.Create_Menu(Menu)
+End Sub
+
+#if Java
+public boolean _onCreateOptionsMenu(android.view.Menu menu) {
+	 processBA.raiseEvent(null, "create_menu", menu);
+	 return true;
+	
+}
+#End If
+#End Region
+
+'Program code should go into B4XMainPage and other pages.
